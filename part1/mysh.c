@@ -82,20 +82,21 @@ char *readIn(void){
 	if(!text){
 		error("built in readIn");	
 	}
-
 	fgets(text, 128, stdin);
 	if(!text){
 		error("second built in read in");
 	}
-
-	//nulls out the \n character	
-	text[strlen(text)-1]=0;
+	if(strlen(text) > 1){
+		//nulls out the \n character	
+		text[strlen(text)-1]=0;
+	}
 
 	//printf("READ PRINT: %s\n", text);
 	return text;
 }
 
 char **getArgs(char *line){
+	
 	char **arguments = malloc(sizeof(char*)*128);
 	char *argument;
 	int argNum = 0;
@@ -134,11 +135,10 @@ int run(char **args){
 	pid = fork();
 	//CHILD
 	if(pid == 0){
-		//printf("ARG1: %s\n",args[0]);
 		if(execvp(*args, args)<1){
 			error("run");
 		}
-		exit(0);//??????????????????????????????????????????????????
+		exit(0);
 	}
 	//ERROR
 	else if(pid < 0){
@@ -158,9 +158,10 @@ int main(int argc, int argv){
 	do{
 		printf("mysh (%d)> ",runNum);
 		lineIn = readIn();
-		args = getArgs(lineIn);
-		loop = run(args);		
-
+		if(strlen(lineIn) > 1){
+			args = getArgs(lineIn);
+			loop = run(args);		
+		}
 		runNum++;
 	}while(loop);
 
