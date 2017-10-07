@@ -65,7 +65,9 @@ int built_in_pwd(char **args){
 		error("built_in_pwd");
 	}
 	else{
-		printf("ParentPntr%s\n", parentPntr);
+		printf(parentPntr);
+        char* newLine = "\n";
+		printf(newLine);
 	}
 	return 0;
 }
@@ -224,11 +226,11 @@ int main(int argc, int argv){
         
 		if(strlen(lineIn) > 1){
         FILE *saved = stdout;
-        stdout = fopen("log.txt", "a");
+        stdout = fopen(fileOut, "a");
 		args = getArgs(lineIn);
 		loop = run(args);
-        fclose(stdout);
-        stdout = saved;
+        //fclose(stdout);
+       //stdout = saved;
 		}
 		//fclose(stdout);
 		//stdout = savedOut;
