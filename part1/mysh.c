@@ -65,7 +65,7 @@ int built_in_pwd(char **args){
 		error("built_in_pwd");
 	}
 	else{
-		printf("%s\n", parentPntr);
+		printf("ParentPntr%s\n", parentPntr);
 	}
 	return 0;
 }
@@ -106,7 +106,7 @@ char **getArgs(char *line){
 	
 	argument = strtok_r(line, " \t", &line);
 	while(argument != NULL){
-		printf("arg: %s\n", argument);
+	//	printf("arg: %s\n", argument);
 		arguments[argNum] = argument;
 		argNum++;
 		//printf("TOKEN PRINT: %s\n",argument);
@@ -123,9 +123,9 @@ int run(char **args){
 	int built_itr = 0;
         int (*built_in_runner) (char**);
 	while(built_itr < num_built_ins() || built_itr < 0){
-		printf("ARGS: %s, NAMES: %s\n", args[0], built_in_names[built_itr]);
+	//	printf("ARGS: %s, NAMES: %s\n", args[0], built_in_names[built_itr]);
       		if(!strcmp(args[0], built_in_names[built_itr])){
-			printf("IN THIS");
+	//		printf("IN THIS");
       			built_in_runner = *built_in_comm[built_itr];
  	     		return(built_in_runner(&args[1]));
                 }
@@ -152,13 +152,16 @@ int run(char **args){
 
 char* reformatInput(char *argLine){
 	int i = 0;
+    //variable which stores if its an input or an output operator
+    char flag='\0';
 	size_t fileLen = sizeof(argLine);
         char *fileText = malloc(fileLen+1);
 
 	while(i+1 < strlen(argLine)){
 		//printf("ARGS OF I : %s\n", args[i]);
 		if(argLine[i] == '>' || argLine[i] == '<'){
-			//printf("i: %s /END\n", args[i+2]);
+			flag=argLine[i];
+            //printf("i: %s /END\n", args[i+2]);
 			//stdout = fopen(args[i+2], "a");
 			int temp = i-1;
 			i = i+2; //to move past both > and ' '.
@@ -175,6 +178,21 @@ char* reformatInput(char *argLine){
 				printf("-_-%s-_-\n", fileText);
 				i++;
 			}
+
+            if(flag - 0 != 0)
+            {
+            
+                if(flag == '>')
+			    {
+                   ; //fileW = fopen(argv[4],"w");
+                }
+                else
+			    {
+                    ;
+                }
+
+            }   
+
 	        while(temp < i || argLine[i] - 9 == 0 || argLine[i] - 32 == 0){
 		        argLine[i]=0;
 		        i--;
@@ -188,7 +206,9 @@ char* reformatInput(char *argLine){
 }
 
 int main(int argc, int argv){
-	char* fileOut;
+	FILE* fileR = NULL;
+    FILE* fileW = NULL;
+    char* fileOut;
 	int runNum = 1;
 	int loop = 1;
 	char *lineIn;
@@ -203,8 +223,12 @@ int main(int argc, int argv){
 		}
         
 		if(strlen(lineIn) > 1){
-			args = getArgs(lineIn);
-			loop = run(args);		
+        FILE *saved = stdout;
+        stdout = fopen("log.txt", "a");
+		args = getArgs(lineIn);
+		loop = run(args);
+        fclose(stdout);
+        stdout = saved;
 		}
 		//fclose(stdout);
 		//stdout = savedOut;
