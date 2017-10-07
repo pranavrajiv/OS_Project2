@@ -120,13 +120,12 @@ char **getArgs(char *line){
 int run(char **args){
 	int status;
 	pid_t pid, wpid;
-	
 	int built_itr = 0;
         int (*built_in_runner) (char**);
 	while(built_itr < num_built_ins() || built_itr < 0){
-		//printf("ARGS: %s, NAMES: %s\n", args[0], built_in_names[built_itr]);
+		printf("ARGS: %s, NAMES: %s\n", args[0], built_in_names[built_itr]);
       		if(!strcmp(args[0], built_in_names[built_itr])){
-		//	printf("IN THIS");
+			printf("IN THIS");
       			built_in_runner = *built_in_comm[built_itr];
  	     		return(built_in_runner(&args[1]));
                 }
@@ -176,10 +175,10 @@ char* reformatInput(char *argLine){
 				printf("-_-%s-_-\n", fileText);
 				i++;
 			}
-			while(temp < i || argLine[i] - 9 == 0 || argLine[i] - 32 == 0){
-				argLine[i]=0;
-				i--;
-			}
+	        while(temp < i || argLine[i] - 9 == 0 || argLine[i] - 32 == 0){
+		        argLine[i]=0;
+		        i--;
+	        }
 			printf("FINAL LINE: %s", argLine);
 			break;
 		}
@@ -199,9 +198,10 @@ int main(int argc, int argv){
 		printf("mysh (%d)> ",runNum);
 		lineIn = readIn();
 		fileOut = reformatInput(lineIn);
-		if(strlen(lineIn) - 10 == 0){
+		if(lineIn[strlen(lineIn)-1] - 10 == 0){
 			lineIn[strlen(lineIn)-1]=0;
 		}
+        
 		if(strlen(lineIn) > 1){
 			args = getArgs(lineIn);
 			loop = run(args);		
