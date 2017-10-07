@@ -88,7 +88,7 @@ char *readIn(void){
 	}
 	if(strlen(text) > 1){
 		//nulls out the \n character	
-		text[strlen(text)-1]=0;
+		//text[strlen(text)-1]=0;
 	}
 
 	//printf("READ PRINT: %s\n", text);
@@ -106,6 +106,7 @@ char **getArgs(char *line){
 	
 	argument = strtok_r(line, " \t", &line);
 	while(argument != NULL){
+		printf("arg: %s\n", argument);
 		arguments[argNum] = argument;
 		argNum++;
 		//printf("TOKEN PRINT: %s\n",argument);
@@ -135,6 +136,7 @@ int run(char **args){
 	pid = fork();
 	//CHILD
 	if(pid == 0){
+		
 		if(execvp(*args, args)<1){
 			error("run");
 		}
@@ -149,7 +151,45 @@ int run(char **args){
 	}
 }
 
+char* outputOptions(char *argLine){
+	int i = 0;
+	size_t fileLen = sizeof(argLine);
+        char *fileText = malloc(fileLen+1);
+
+	while(i+1 < strlen(argLine)){
+		//printf("ARGS OF I : %s\n", args[i]);
+		if(argLine[i] == '>'){
+			//printf("i: %s /END\n", args[i+2]);
+			//stdout = fopen(args[i+2], "a");
+			int temp = i-1;
+			i = i+2; //to move past both > and ' '.
+			int j = 0;
+			printf("i: %d\n",i);
+			while(i+1 < strlen(argLine)){
+				printf("WHILE,IF  %c", argLine[i]);
+				if((argLine[i] - 32 != 0)&&(argLine[i] - 9 != 0)){
+					printf("\t %c\n\n", argLine[i]);
+					fileText[j] = argLine[i];
+					printf("\n\nLINE: %s\n\n",argLine);
+					j++;
+				}
+				printf("-_-%s-_-\n", fileText);
+				i++;
+			}
+			while(temp < i || argLine[i] - 9 == 0 || argLine[i] - 32 == 0){
+				argLine[i]=0;
+				i--;
+			}
+			printf("FINAL LINE: %s", argLine);
+			break;
+		}
+		i++;
+	}
+	return fileText;
+}
+
 int main(int argc, int argv){
+	char* fileOut;
 	int runNum = 1;
 	int loop = 1;
 	char *lineIn;
@@ -158,10 +198,16 @@ int main(int argc, int argv){
 	do{
 		printf("mysh (%d)> ",runNum);
 		lineIn = readIn();
+		fileOut = outputOptions(lineIn);
+		if(strlen(lineIn) - 10 == 0){
+			lineIn[strlen(lineIn)-1]=0;
+		}
 		if(strlen(lineIn) > 1){
 			args = getArgs(lineIn);
 			loop = run(args);		
 		}
+		//fclose(stdout);
+		//stdout = savedOut;
 		runNum++;
 	}while(loop);
 
