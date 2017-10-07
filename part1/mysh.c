@@ -151,14 +151,14 @@ int run(char **args){
 	}
 }
 
-char* outputOptions(char *argLine){
+char* reformatInput(char *argLine){
 	int i = 0;
 	size_t fileLen = sizeof(argLine);
         char *fileText = malloc(fileLen+1);
 
 	while(i+1 < strlen(argLine)){
 		//printf("ARGS OF I : %s\n", args[i]);
-		if(argLine[i] == '>'){
+		if(argLine[i] == '>' || argLine[i] == '<'){
 			//printf("i: %s /END\n", args[i+2]);
 			//stdout = fopen(args[i+2], "a");
 			int temp = i-1;
@@ -198,7 +198,7 @@ int main(int argc, int argv){
 	do{
 		printf("mysh (%d)> ",runNum);
 		lineIn = readIn();
-		fileOut = outputOptions(lineIn);
+		fileOut = reformatInput(lineIn);
 		if(strlen(lineIn) - 10 == 0){
 			lineIn[strlen(lineIn)-1]=0;
 		}
