@@ -186,7 +186,8 @@ char* reformatInput(char *argLine){
             
                 if(flag == '>')
 			    {
-                   ; //fileW = fopen(argv[4],"w");
+                    FILE *saved = stdout;
+                    stdout = fopen(fileText, "a");
                 }
                 else
 			    {
@@ -225,8 +226,6 @@ int main(int argc, int argv){
 		}
         
 		if(strlen(lineIn) > 1){
-        FILE *saved = stdout;
-        stdout = fopen(fileOut, "a");
 		args = getArgs(lineIn);
 		loop = run(args);
         //fclose(stdout);
